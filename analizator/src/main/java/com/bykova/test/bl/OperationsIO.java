@@ -17,16 +17,21 @@ import java.util.logging.Logger;
 
 import static com.bykova.test.bli.Report.FORMATTER;
 
+/**
+ * Класс для управления операциями ввода-вывода
+ * @param <T>
+ */
 public class OperationsIO<T> {
     Logger log = Logger.getLogger(Main.class.getName());
 
-    public void writeToFile(List<T> amountByDates, String outputFileName) {
-        if (T instanceof AmountByDate){
-            
-        }
-
+    /**
+     * Запись в файл
+     * @param reportData данные для записи в файл
+     * @param outputFileName название выходного файла
+     */
+    public void writeToFile(List<T> reportData, String outputFileName) {
         try (FileWriter writer = new FileWriter(outputFileName)) {
-            for (T parameter: amountByDates) {
+            for (T parameter: reportData) {
                 writer.write(parameter.toString()+"\n");
             }
         } catch (IOException e) {
@@ -34,6 +39,11 @@ public class OperationsIO<T> {
         }
     }
 
+    /**
+     * Чтение из файла
+     * @param fileName название файла с входными параметрами
+     * @return список объектов параметров операций
+     */
     public List<OperationParameters> readFromFile(String fileName) {
         List<OperationParameters> operationParameters = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(fileName))) {

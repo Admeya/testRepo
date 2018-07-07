@@ -11,11 +11,20 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.summingDouble;
 
+/**
+ * Реализация класса построения отчетов
+ */
 public class ReportImpl implements Report {
     private String outputSumByDayFile;
     private String outputSumByOfficeFile;
     private List<OperationParameters> operationParameters;
 
+    /**
+     * Конструктор
+     * @param inputFileName название входного файла с логом по операциям
+     * @param outputSumByDayFile название выходного файла для отчета по дням
+     * @param outputSumByOfficeFile название выходного файла для отчета по офисам
+     */
     public ReportImpl(String inputFileName, String outputSumByDayFile, String outputSumByOfficeFile) {
         this.outputSumByDayFile = outputSumByDayFile;
         this.outputSumByOfficeFile = outputSumByOfficeFile;
