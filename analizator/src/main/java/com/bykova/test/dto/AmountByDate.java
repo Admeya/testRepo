@@ -58,6 +58,6 @@ public class AmountByDate {
 
     @Override
     public String toString() {
-        return dateOperation.format(FORMATTER) + " " + sumOperation;
+        return dateOperation.format(FORMATTER) + " " + String.format("%1$.2f", sumOperation);
     }
 }

@@ -54,6 +54,6 @@ public class AmountByOffice {
 
     @Override
     public String toString() {
-        return office + " " + sumOperation;
+        return office + " " + String.format("%1$.2f", sumOperation);
     }
 }
