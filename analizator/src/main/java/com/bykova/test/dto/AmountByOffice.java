@@ -10,8 +10,9 @@ public class AmountByOffice {
 
     /**
      * Конструктор
+     *
      * @param dateOperation дата операции
-     * @param sumOperation сумма операции
+     * @param sumOperation  сумма операции
      */
     public AmountByOffice(String dateOperation, Double sumOperation) {
         this.office = dateOperation;

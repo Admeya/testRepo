@@ -19,20 +19,22 @@ import static com.bykova.test.bli.Report.FORMATTER;
 
 /**
  * Класс для управления операциями ввода-вывода
- * @param <T>
+ *
+ * @param <T> класс отчета для вывода на печать
  */
 public class OperationsIO<T> {
-    Logger log = Logger.getLogger(Main.class.getName());
+    private Logger log = Logger.getLogger(Main.class.getName());
 
     /**
      * Запись в файл
-     * @param reportData данные для записи в файл
+     *
+     * @param reportData     данные для записи в файл
      * @param outputFileName название выходного файла
      */
     public void writeToFile(List<T> reportData, String outputFileName) {
         try (FileWriter writer = new FileWriter(outputFileName)) {
-            for (T parameter: reportData) {
-                writer.write(parameter.toString()+"\n");
+            for (T parameter : reportData) {
+                writer.write(parameter.toString() + "\n");
             }
         } catch (IOException e) {
             log.log(Level.SEVERE, e.getMessage());
@@ -41,6 +43,7 @@ public class OperationsIO<T> {
 
     /**
      * Чтение из файла
+     *
      * @param fileName название файла с входными параметрами
      * @return список объектов параметров операций
      */
@@ -58,7 +61,8 @@ public class OperationsIO<T> {
                 operationParameters.add(parameter);
             }
         } catch (FileNotFoundException e) {
-            log.log(Level.SEVERE, e.getMessage());
+            log.log(Level.SEVERE, "Путь к входному файлу указан неверно");
+            throw new RuntimeException();
         }
         return operationParameters;
     }

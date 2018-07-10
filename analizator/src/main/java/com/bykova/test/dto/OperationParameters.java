@@ -14,9 +14,10 @@ public class OperationParameters {
 
     /**
      * Конструктор на все параметры операции
-     * @param dateOperation дата и время операции
-     * @param office точка продаж
-     * @param sumOperation сумма операции
+     *
+     * @param dateOperation   дата и время операции
+     * @param office          точка продаж
+     * @param sumOperation    сумма операции
      * @param numberOperation номер операции
      */
     public OperationParameters(LocalDate dateOperation, String office, String sumOperation,

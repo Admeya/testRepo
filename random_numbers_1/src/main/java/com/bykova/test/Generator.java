@@ -2,8 +2,6 @@ package com.bykova.test;
 
 
 import java.io.*;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -20,23 +18,47 @@ import java.util.logging.Logger;
  * Генератор тестовых данных
  */
 public class Generator {
-    public static double MIN_OPERATION_SUM = 10_000.00;
-    public static double MAX_OPERATION_SUM = 100_000.00;
+    private static final double MIN_OPERATION_SUM = 10_000.00;
+    private static final double MAX_OPERATION_SUM = 100_000.00;
+    private static final int FIRST_DAY_OF_MONTH = 1;
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.YYYY");
+    private static final String MSG_ERROR_ALL = "Укажите путь к файлу с точками продаж, " +
+            "количество операций и название выходного файла";
+    private static final String MSG_ERROR_NUMBER_PARAMETERS = "Укажите правильное число параметров";
 
     Logger log = Logger.getLogger(Generator.class.getName());
 
     /**
      * Генерация тестовых данных в файл
+     *
      * @param args параметры: файл с точками продаж, количеством операций, названием файла выходных данных
      */
     public void generateTestDataToFile(String[] args) {
+        if (args.length == 0) {
+            log.log(Level.SEVERE, MSG_ERROR_ALL);
+        } else if (args.length != 3) {
+            System.out.println(MSG_ERROR_NUMBER_PARAMETERS);
+            throw new RuntimeException();
+        }
         String inputFileName = args[0];
-        int numberOperation = Integer.valueOf(args[1]);
+        int numberOperation = getNumberOperations(args[1]);
         String outputFileName = args[2];
-        List<String> offices = getOfficesFromFile(inputFileName);
 
+        List<String> offices = getOfficesFromFile(inputFileName);
         List<OperationParameters> operationParametersList = getOperations(offices, numberOperation);
         writeToFile(operationParametersList, outputFileName);
+    }
+
+    private int getNumberOperations(String srcNumberInString) {
+        int numberOperation;
+        try {
+            numberOperation = Integer.valueOf(srcNumberInString);
+        } catch (NumberFormatException e) {
+            log.log(Level.SEVERE, "Введите количество операций цифрами");
+            throw new RuntimeException();
+        }
+        return numberOperation;
     }
 
     private List<OperationParameters> getOperations(List<String> offices, int numberOperation) {
@@ -54,32 +76,29 @@ public class Generator {
 
     private void writeToFile(List<OperationParameters> operationParametersList, String outputFileName) {
         try (FileWriter writer = new FileWriter(outputFileName)) {
-            for (OperationParameters parameter: operationParametersList) {
-                writer.write(parameter.toString()+"\n");
+            for (OperationParameters parameter : operationParametersList) {
+                writer.write(parameter.toString() + "\n");
             }
         } catch (IOException e) {
             log.log(Level.SEVERE, e.getMessage());
         }
-
     }
 
     private String getDateFromLastYear() {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-
         Integer year = LocalDateTime.now().minusYears(1).getYear();
 
-        LocalDate localDateMin = LocalDate.of(year, Month.JANUARY, 1);
+        LocalDate localDateMin = LocalDate.of(year, Month.JANUARY, FIRST_DAY_OF_MONTH);
         int minimumDate = (int) localDateMin.toEpochDay();
 
-        LocalDate localDateMax = LocalDate.of(year, Month.DECEMBER, Month.DECEMBER.maxLength());
+        LocalDate localDateMax = LocalDate.of(LocalDateTime.now().getYear(), Month.JANUARY, FIRST_DAY_OF_MONTH);
         int maximumDate = (int) localDateMax.toEpochDay();
 
         long randomDay = getRandomNumber(minimumDate, maximumDate);
 
-        return LocalDate.ofEpochDay(randomDay).format(dateFormatter);
+        return LocalDate.ofEpochDay(randomDay).format(DATE_FORMATTER);
     }
 
-    private String getRandomTime(){
+    private String getRandomTime() {
         int randomMinutes = getRandomNumber(LocalTime.MIN.getMinute(), LocalTime.MAX.getMinute());
         int randomHours = getRandomNumber(LocalTime.MIN.getHour(), LocalTime.MAX.getHour());
 
@@ -115,7 +134,8 @@ public class Generator {
                 offices.add(fileScanner.nextLine());
             }
         } catch (FileNotFoundException e) {
-            log.log(Level.SEVERE, e.toString());
+            log.log(Level.SEVERE, "Путь к входному файлу указан неверно");
+            throw new RuntimeException();
         }
         return offices;
     }

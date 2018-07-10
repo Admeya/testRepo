@@ -14,8 +14,9 @@ public class AmountByDate {
 
     /**
      * Конструктор
+     *
      * @param dateOperation дата операции
-     * @param sumOperation сумма операции
+     * @param sumOperation  сумма операции
      */
     public AmountByDate(LocalDate dateOperation, Double sumOperation) {
         this.dateOperation = dateOperation;
